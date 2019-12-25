@@ -1,0 +1,32 @@
+#cmakedefine PACKAGE_NAME "@PACKAGE_NAME@"
+#cmakedefine PACKAGE_TARNAME "@PACKAGE_TARNAME@"
+#cmakedefine PACKAGE_VERSION "@PACKAGE_VERSION@"
+#cmakedefine PACKAGE_STRING "@PACKAGE_STRING@"
+
+#cmakedefine DOOMWADDIR "@DOOMWADDIR@"
+
+#cmakedefine HAVE_STRICMP
+#ifndef HAVE_STRICMP
+#define stricmp strcasecmp
+#endif /* HAVE_STRICMP */
+
+#cmakedefine HAVE_STRNICMP
+#ifndef HAVE_STRNICMP
+#define strnicmp strncasecmp
+#endif /* HAVE_STRNICMP */
+
+#cmakedefine HAVE_GETOPT
+#cmakedefine HAVE_MMAP
+#cmakedefine HAVE_SCHED_SETAFFINITY
+#cmakedefine HAVE_USLEEP
+
+#cmakedefine HAVE_SYS_WAIT_H
+#cmakedefine HAVE_UNISTD_H
+#cmakedefine HAVE_ASM_BYTEORDER_H
+
+#cmakedefine GL_DOOM
+#cmakedefine USE_GLU_IMAGESCALE
+#cmakedefine USE_GLU_MIPMAP
+#cmakedefine USE_GLU_TESS
+
+#cmakedefine HAVE_ZLIB
