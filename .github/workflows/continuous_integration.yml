@@ -57,7 +57,7 @@ jobs:
         if [[ "${{ runner.os }}" == 'Windows' ]]; then
           pwd
           ls -lR
-          cmake -DSDL2_PATH=SDL2-2.0.10 ../prboom2
+          cmake -DSDL2_PATH=./SDL2-2.0.10 ../prboom2
         else
           cmake ../prboom2
         fi
