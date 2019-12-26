@@ -55,6 +55,8 @@ jobs:
       run: |
         cd build
         if [[ "${{ runner.os }}" == 'Windows' ]]; then
+          pwd
+          ls -lR
           cmake -DSDL2_PATH=SDL2-2.0.10 ../prboom2
         else
           cmake ../prboom2
@@ -63,10 +65,11 @@ jobs:
     - name: Build
       shell: bash
       run: |
+        cd build
         if [[ "${{ runner.os }}" == 'Windows' ]]; then
-          cmake --build build --config Release -- -maxcpucount -verbosity:minimal
+          cmake --build . --config Release -- -maxcpucount -verbosity:minimal
         else
-          cmake --build build -- --jobs=2 --keep-going
+          cmake --build . -- --jobs=2 --keep-going
         fi
 
 # TODO: package artifacts
