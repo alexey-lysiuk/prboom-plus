@@ -37,7 +37,7 @@ jobs:
       shell: bash
       run: |
         if [[ "${{ runner.os }}" == 'Linux' ]]; then
-          apt install libsdl2-dev
+          sudo apt install libsdl2-dev
         elif [[ "${{ runner.os }}" == 'macOS' ]]; then
           brew install sdl2
         else
@@ -49,7 +49,7 @@ jobs:
       run: |
         mkdir build
         cd build
-        cmake ..
+        cmake ../prboom2
 
     - name: Build
       shell: bash
