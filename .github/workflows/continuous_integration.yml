@@ -1,0 +1,61 @@
+name: Continuous Integration
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    name: ${{ matrix.config.name }}
+    runs-on: ${{ matrix.config.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+        # - {
+        #     name: "Visual Studio",
+        #     # artifact: "Windows-MSVC.tar.xz",
+        #     os: windows-latest,
+        #     build_type: "Release" #, # cc: "cl", cxx: "cl",
+        #     #environment_script: "C:/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/VC/Auxiliary/Build/vcvars64.bat"
+        #   }
+        - {
+            name: "Linux GCC",
+            # artifact: "Linux.tar.xz",
+            os: ubuntu-latest,
+            build_type: "Release" #, cc: "gcc", cxx: "g++"
+          }
+        - {
+            name: "macOS Latest Clang",
+            # artifact: "macOS.tar.xz",
+            os: macos-latest,
+            build_type: "Release" #, cc: "clang", cxx: "clang++"
+          }
+
+    steps:
+    - uses: actions/checkout@v1
+
+    - name: Install Dependencies
+      shell: bash
+      run: |
+        if [[ "${{ runner.os }}" == 'Linux' ]]; then
+          apt install libsdl2-dev
+        elif [[ "${{ runner.os }}" == 'macOS' ]]; then
+          brew install sdl2
+        else
+          echo TODO Windows
+        fi
+
+    - name: Configure
+      shell: bash
+      run: |
+        mkdir build
+        cd build
+        cmake ..
+
+    - name: Build
+      shell: bash
+      run: |
+        if [[ "${{ runner.os }}" == 'Windows' ]]; then
+          cmake --build . --config Release -- -maxcpucount -verbosity:minimal
+        else
+          cmake --build . -- --jobs=2 --keep-going
+        fi
