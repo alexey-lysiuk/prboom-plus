@@ -46,7 +46,7 @@ jobs:
           brew install sdl2
         else
           curl -LO https://libsdl.org/release/SDL2-devel-2.0.10-VC.zip
-          7z e SDL2-devel-2.0.10-VC.zip -r
+          7z x SDL2-devel-2.0.10-VC.zip
         fi
 
     - name: Configure
