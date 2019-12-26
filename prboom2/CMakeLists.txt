@@ -52,8 +52,12 @@ find_package(SDL2_image)
 # TODO: make option, HAVE_..., USE_..., check function 
 find_package(SDL2_mixer)
 
-# TODO: make option, HAVE_..., USE_..., check function
+# TODO: make option, check function
 find_package(SDL2_net)
+if(SDL2_NET_FOUND)
+    set(HAVE_NET TRUE)
+    set(USE_SDL_NET TRUE)
+endif()
 
 find_package(zlib)
 if(ZLIB_FOUND)

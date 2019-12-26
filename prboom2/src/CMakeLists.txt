@@ -1,16 +1,12 @@
-# TODO: make option
-set(BUILD_SERVER TRUE)
 
-set(PRBOOM_PLUS_GAME_SERVER_SOURCES
-    d_server.c
-    protocol.h
-    SDL/i_network.c
-)
+function(ApplySDL2NetOptions TARGET)
+    if(SDL2_NET_FOUND)
+        target_include_directories(${TARGET} PRIVATE ${SDL2_NET_INCLUDE_DIRS})
+        target_link_libraries(${TARGET} PRIVATE ${SDL2_NET_LIBRARIES})
+    endif()
+endfunction()
 
-# set(PRBOOM_PLUS_GAME_SERVER_SOURCES
-#     ${PRBOOM_PLUS_GAME_SERVER_SOURCES}
-#
-# )
+# PrBoom main executable
 
 set(COMMON_SRC
     am_map.c
@@ -280,6 +276,13 @@ set(DOOMMUSIC_SOURCES
     MUSIC/vorbisplayer.h
 )
 
+set(EXTRA_FILES
+    r_drawcolpipeline.inl
+    r_drawcolumn.inl
+    r_drawflush.inl
+    r_drawspan.inl
+)
+
 set(PRBOOM_PLUS_SOURCES
     ${COMMON_SRC}
     ${NET_CLIENT_SRC}
@@ -290,20 +293,12 @@ set(PRBOOM_PLUS_SOURCES
     ${PCSOUND_SOURCES}
     ${TEXTSCREEN_SOURCES}
     ${DOOMMUSIC_SOURCES}
+    ${EXTRA_FILES}
 )
 
-#prboom_plus_LDADD = SDL/libsdldoom.a PCSOUND/libpcsound.a TEXTSCREEN/libtextscreen.a MUSIC/libdoommusic.a @MIXER_LIBS@ @NET_LIBS@ @SDL_LIBS@ @GL_LIBS@ @MATH_LIB@ @LIBZ_LIBS@
+add_definitions(-DHAVE_CONFIG_H)
 
-# set(EXTRA_DIST
-#     icon.c
-#     r_drawcolpipeline.inl
-#     r_drawcolumn.inl
-#     r_drawflush.inl
-#     r_drawspan.inl
-#     SDL_windows_main.c
-# )
-
-add_executable(prboom-plus ${PRBOOM_PLUS_SOURCES})
+add_executable(prboom-plus WIN32 ${PRBOOM_PLUS_SOURCES})
 target_include_directories(prboom-plus PRIVATE
     ${SDL2_INCLUDE_DIRS}
     ${CMAKE_BINARY_DIR}
@@ -313,5 +308,50 @@ target_link_libraries(prboom-plus PRIVATE
     ${OPENGL_LIBRARIES}
     ${SDL2_LIBRARIES}
 )
+set_target_properties(prboom-plus PROPERTIES
+    RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}
+)
+ApplySDL2NetOptions(prboom-plus)
 
-# TODO: server executable
+
+# PrBoom-Plus server executable
+
+option(BUILD_SERVER "Build PrBoom-Plus server executable" ON)
+
+if(BUILD_SERVER)
+    set(PRBOOM_PLUS_GAME_SERVER_SOURCES
+        d_server.c
+        protocol.h
+        SDL/i_network.c
+    )
+
+    if(MSVC)
+        set(PRBOOM_PLUS_GAME_SERVER_SOURCES
+            ${PRBOOM_PLUS_GAME_SERVER_SOURCES}
+            SDL/i_system.c
+            SDL/SDL_windows_main.c
+        )
+    else()
+        set(PRBOOM_PLUS_GAME_SERVER_SOURCES
+            ${PRBOOM_PLUS_GAME_SERVER_SOURCES}
+            POSIX/i_system.c
+        )
+    endif()
+
+    add_executable(prboom-plus-game-server ${PRBOOM_PLUS_GAME_SERVER_SOURCES})
+    target_include_directories(prboom-plus-game-server PRIVATE
+        ${SDL2_INCLUDE_DIRS}
+        ${CMAKE_BINARY_DIR}
+        ${CMAKE_CURRENT_SOURCE_DIR}
+    )
+    target_link_libraries(prboom-plus-game-server PRIVATE
+        ${SDL2_LIBRARIES}
+    )
+    set_target_properties(prboom-plus-game-server PROPERTIES
+        COMPILE_DEFINITIONS PRBOOM_SERVER
+        RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}
+    )
+    ApplySDL2NetOptions(prboom-plus-game-server)
+endif()
+
+# TODO: macOS launcher
