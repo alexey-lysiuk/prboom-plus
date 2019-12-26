@@ -10,24 +10,26 @@ jobs:
       fail-fast: false
       matrix:
         config:
-        # - {
-        #     name: "Visual Studio",
-        #     # artifact: "Windows-MSVC.tar.xz",
-        #     os: windows-latest,
-        #     build_type: "Release" #, # cc: "cl", cxx: "cl",
-        #     #environment_script: "C:/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/VC/Auxiliary/Build/vcvars64.bat"
-        #   }
+        - {
+            name: "Visual Studio",
+            # artifact: "...",
+            os: windows-latest #,
+            #build_type: "Release" #, # cc: "cl", cxx: "cl",
+            #environment_script: "C:/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/VC/Auxiliary/Build/vcvars64.bat"
+          }
+        # TODO MSVC 32-bit
         - {
             name: "Linux GCC",
-            # artifact: "Linux.tar.xz",
+            # artifact: "...",
             os: ubuntu-latest,
-            build_type: "Release" #, cc: "gcc", cxx: "g++"
+            build_type: "Release"
           }
+        # TODO Linux Clang
         - {
             name: "macOS Latest Clang",
-            # artifact: "macOS.tar.xz",
+            # artifact: "...",
             os: macos-latest,
-            build_type: "Release" #, cc: "clang", cxx: "clang++"
+            build_type: "Release"
           }
 
     steps:
@@ -42,7 +44,8 @@ jobs:
         elif [[ "${{ runner.os }}" == 'macOS' ]]; then
           brew install sdl2
         else
-          echo TODO Windows
+          curl -LO https://libsdl.org/release/SDL2-devel-2.0.10-VC.zip
+          7z e SDL2-devel-2.0.10-VC.zip
         fi
 
     - name: Configure
@@ -60,3 +63,5 @@ jobs:
         else
           cmake --build build -- --jobs=2 --keep-going
         fi
+
+# TODO: package artifacts
