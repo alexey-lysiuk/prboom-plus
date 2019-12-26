@@ -13,19 +13,19 @@ jobs:
         - {
             name: "Visual Studio",
             os: windows-latest,
-            build_type: "Release"
+            build_type: "Debug"
           }
         # TODO MSVC 32-bit
         - {
             name: "Linux GCC",
             os: ubuntu-latest,
-            build_type: "Release"
+            build_type: "Debug"
           }
         # TODO Linux Clang
         - {
             name: "macOS Clang",
             os: macos-latest,
-            build_type: "Release"
+            build_type: "Debug"
           }
 
     steps:
