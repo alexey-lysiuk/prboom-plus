@@ -38,6 +38,7 @@ jobs:
     - name: Install Dependencies
       shell: bash
       run: |
+        mkdir build
         if [[ "${{ runner.os }}" == 'Linux' ]]; then
           sudo apt update
           sudo apt install libsdl2-dev
@@ -45,15 +46,18 @@ jobs:
           brew install sdl2
         else
           curl -LO https://libsdl.org/release/SDL2-devel-2.0.10-VC.zip
-          7z e SDL2-devel-2.0.10-VC.zip
+          7z e SDL2-devel-2.0.10-VC.zip -r
         fi
 
     - name: Configure
       shell: bash
       run: |
-        mkdir build
         cd build
-        cmake ../prboom2
+        if [[ "${{ runner.os }}" == 'Windows' ]]; then
+          cmake -DSDL2_PATH=SDL2-2.0.10 ../prboom2
+        else
+          cmake ../prboom2
+        fi
 
     - name: Build
       shell: bash
