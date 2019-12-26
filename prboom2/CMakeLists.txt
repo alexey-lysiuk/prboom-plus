@@ -26,8 +26,6 @@ check_include_file("sys/wait.h" HAVE_SYS_WAIT_H)
 check_include_file("unistd.h" HAVE_UNISTD_H)
 check_include_file("asm/byteorder.h" HAVE_ASM_BYTEORDER_H)
 
-# TODO: Windows libs
-
 find_package(OpenGL)
 if(OPENGL_FOUND)
     # TODO: make option
@@ -39,7 +37,6 @@ if (OPENGL_GLU_FOUND)
     set(USE_GLU_MIPMAP TRUE)
     set(USE_GLU_TESS TRUE)
 endif()
-# TODO: link with OpenGL
 
 find_package(SDL2 REQUIRED)
 if(SDL2_FOUND)
@@ -49,8 +46,11 @@ endif()
 # TODO: make option, HAVE_..., USE_..., check function
 find_package(SDL2_image)
 
-# TODO: make option, HAVE_..., USE_..., check function 
+# TODO: make option, check function 
 find_package(SDL2_mixer)
+if(SDL2_MIXER_FOUND)
+    set(HAVE_LIBSDL2_MIXER TRUE)
+endif()
 
 # TODO: make option, check function
 find_package(SDL2_net)

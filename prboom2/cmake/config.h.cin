@@ -32,4 +32,6 @@
 #cmakedefine HAVE_NET
 #cmakedefine USE_SDL_NET
 
+#cmakedefine HAVE_LIBSDL2_MIXER
+
 #cmakedefine HAVE_ZLIB
