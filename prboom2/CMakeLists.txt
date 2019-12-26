@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.0)
 
-project("PrBoom-Plus" VERSION 2.5.1.7 LANGUAGES C)
+project("PrBoom-Plus" VERSION 2.5.1.7)
 
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
@@ -69,6 +69,11 @@ set(DOOMWADDIR "${CMAKE_INSTALL_PREFIX}/share/games/doom" CACHE PATH "Path to in
 
 configure_file(cmake/config.h.cin config.h)
 
+if (MSVC)
+    add_definitions("/D_CRT_SECURE_NO_WARNINGS")
+else()
+    # TODO: GCC/Clang options
+endif()
+
 add_subdirectory(data)
-# TODO
-#add_subdirectory(src)
+add_subdirectory(src)

@@ -15,7 +15,7 @@ set(RDATAWAD_SOURCES
 )
 
 add_executable(rdatawad ${RDATAWAD_SOURCES})
-target_include_directories(rdatawad PRIVATE "${CMAKE_CURRENT_BINARY_DIR}/..")
+target_include_directories(rdatawad PRIVATE ${CMAKE_BINARY_DIR})
 
 
 # PrBoom-Plus internal WAD
