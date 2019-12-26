@@ -1,0 +1,68 @@
+name: Continuous Integration
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    name: ${{ matrix.config.name }}
+    runs-on: ${{ matrix.config.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+        - {
+            name: "Visual Studio",
+            os: windows-latest,
+            build_type: "Release"
+          }
+        # TODO MSVC 32-bit
+        - {
+            name: "Linux GCC",
+            os: ubuntu-latest,
+            build_type: "Release"
+          }
+        # TODO Linux Clang
+        - {
+            name: "macOS Clang",
+            os: macos-latest,
+            build_type: "Release"
+          }
+
+    steps:
+    - uses: actions/checkout@v1
+
+    - name: Install Dependencies
+      shell: bash
+      run: |
+        mkdir build
+        cd build
+        if [[ "${{ runner.os }}" == 'Linux' ]]; then
+          sudo apt update
+          sudo apt install libsdl2-dev
+        elif [[ "${{ runner.os }}" == 'macOS' ]]; then
+          brew install sdl2
+        else
+          curl -LO https://libsdl.org/release/SDL2-devel-2.0.10-VC.zip
+          7z x SDL2-devel-2.0.10-VC.zip
+        fi
+
+    - name: Configure
+      shell: bash
+      run: |
+        cd build
+        if [[ "${{ runner.os }}" == 'Windows' ]]; then
+          declare -x SDL2DIR="`pwd`/SDL2-2.0.10"
+        fi
+        cmake -DCMAKE_BUILD_TYPE=${{ matrix.config.build_type }} ../prboom2
+
+    - name: Build
+      shell: bash
+      run: |
+        cd build
+        if [[ "${{ runner.os }}" == 'Windows' ]]; then
+          cmake --build . --config ${{ matrix.config.build_type }} -- -maxcpucount -verbosity:minimal
+        else
+          cmake --build . -- --jobs=2 --keep-going
+        fi
+
+# TODO: package artifacts
