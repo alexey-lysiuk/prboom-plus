@@ -43,8 +43,11 @@ if(SDL2_FOUND)
     # TODO: check for SDL_JoystickGetAxis
 endif()
 
-# TODO: make option, HAVE_..., USE_..., check function
+# TODO: make option, check function
 find_package(SDL2_image)
+if(SDL2_IMAGE_FOUND)
+    set(HAVE_LIBSDL2_IMAGE TRUE)
+endif()
 
 # TODO: make option, check function 
 find_package(SDL2_mixer)

@@ -311,6 +311,10 @@ target_link_libraries(prboom-plus PRIVATE
 set_target_properties(prboom-plus PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}
 )
+if(SDL2_IMAGE_FOUND)
+    target_include_directories(prboom-plus PRIVATE ${SDL2_IMAGE_INCLUDE_DIRS})
+    target_link_libraries(prboom-plus PRIVATE ${SDL2_IMAGE_LIBRARIES})
+endif()
 if(SDL2_MIXER_FOUND)
     target_include_directories(prboom-plus PRIVATE ${SDL2_MIXER_INCLUDE_DIRS})
     target_link_libraries(prboom-plus PRIVATE ${SDL2_MIXER_LIBRARIES})

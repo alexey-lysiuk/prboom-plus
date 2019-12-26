@@ -38,16 +38,18 @@ jobs:
         cd build
         if [[ "${{ runner.os }}" == 'Linux' ]]; then
           sudo apt update
-          sudo apt install libsdl2-dev libsdl2-mixer-dev libsdl2-net-dev
+          sudo apt install libsdl2-dev libsdl2-image-dev libsdl2-mixer-dev libsdl2-net-dev
         elif [[ "${{ runner.os }}" == 'macOS' ]]; then
-          brew install sdl2 sdl2_mixer sdl2_net
+          brew install sdl2 sdl2_image sdl2_mixer sdl2_net
         else
           curl -LO https://libsdl.org/release/SDL2-devel-2.0.10-VC.zip
           7z x SDL2-devel-2.0.10-VC.zip
-          curl -LO https://libsdl.org/projects/SDL_net/release/SDL2_net-devel-2.0.1-VC.zip
-          7z x SDL2_net-devel-2.0.1-VC.zip
+          curl -LO https://libsdl.org/projects/SDL_image/release/SDL2_image-devel-2.0.5-VC.zip
+          7z x SDL2_image-devel-2.0.5-VC.zip
           curl -LO https://libsdl.org/projects/SDL_mixer/release/SDL2_mixer-devel-2.0.4-VC.zip
           7z x SDL2_mixer-devel-2.0.4-VC.zip
+          curl -LO https://libsdl.org/projects/SDL_net/release/SDL2_net-devel-2.0.1-VC.zip
+          7z x SDL2_net-devel-2.0.1-VC.zip
         fi
 
     - name: Configure
@@ -56,7 +58,8 @@ jobs:
         cd build
         if [[ "${{ runner.os }}" == 'Windows' ]]; then
           declare -x SDL2DIR="`pwd`/SDL2-2.0.10"
-          declare -x SDL2MIXERDIR="`pwd`/SDL2_mixer-2.0.4
+          declare -x SDL2IMAGEDIR="`pwd`/SDL2_image-2.0.5"
+          declare -x SDL2MIXERDIR="`pwd`/SDL2_mixer-2.0.4"
           declare -x SDL2NETDIR="`pwd`/SDL2_net-2.0.1"
         fi
         cmake -DCMAKE_BUILD_TYPE=${{ matrix.config.build_type }} ../prboom2

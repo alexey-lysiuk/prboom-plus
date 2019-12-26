@@ -29,9 +29,11 @@
 #cmakedefine USE_GLU_MIPMAP
 #cmakedefine USE_GLU_TESS
 
-#cmakedefine HAVE_NET
-#cmakedefine USE_SDL_NET
+#cmakedefine HAVE_LIBSDL2_IMAGE
 
 #cmakedefine HAVE_LIBSDL2_MIXER
+
+#cmakedefine HAVE_NET
+#cmakedefine USE_SDL_NET
 
 #cmakedefine HAVE_ZLIB
