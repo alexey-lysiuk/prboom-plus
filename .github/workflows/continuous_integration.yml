@@ -55,12 +55,17 @@ jobs:
       run: |
         cd build
         if [[ "${{ runner.os }}" == 'Windows' ]]; then
-          pwd
-          ls -lR
-          cmake -DSDL2_PATH=./SDL2-2.0.10 ../prboom2
-        else
-          cmake ../prboom2
+          declare -x SDL2DIR="`pwd`/SDL2-2.0.10"
         fi
+        cmake ../prboom2
+
+        # if [[ "${{ runner.os }}" == 'Windows' ]]; then
+        #   #pwd
+        #   #ls -lR
+        #   cmake -DSDL2_PATH=./SDL2-2.0.10 ../prboom2
+        # else
+        #   cmake ../prboom2
+        # fi
 
     - name: Build
       shell: bash
