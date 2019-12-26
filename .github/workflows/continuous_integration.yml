@@ -39,6 +39,7 @@ jobs:
       shell: bash
       run: |
         mkdir build
+        cd build
         if [[ "${{ runner.os }}" == 'Linux' ]]; then
           sudo apt update
           sudo apt install libsdl2-dev
@@ -54,8 +55,7 @@ jobs:
       run: |
         cd build
         if [[ "${{ runner.os }}" == 'Windows' ]]; then
-          ls -R SDL2-2.0.10
-          cmake -DSDL2_PATH=`pwd`/SDL2-2.0.10 ../prboom2
+          cmake -DSDL2_PATH=SDL2-2.0.10 ../prboom2
         else
           cmake ../prboom2
         fi
