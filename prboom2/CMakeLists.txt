@@ -69,6 +69,12 @@ set(DOOMWADDIR "${CMAKE_INSTALL_PREFIX}/share/games/doom" CACHE PATH "Path to in
 
 configure_file(cmake/config.h.cin config.h)
 
+if (MSVC)
+    add_definitions("/D_CRT_SECURE_NO_WARNINGS")
+else()
+    # TODO: GCC/Clang options
+endif()
+
 add_subdirectory(data)
 # TODO
 #add_subdirectory(src)
