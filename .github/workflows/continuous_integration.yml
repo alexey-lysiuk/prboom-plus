@@ -56,7 +56,7 @@ jobs:
       shell: bash
       run: |
         if [[ "${{ runner.os }}" == 'Windows' ]]; then
-          cmake --build . --config Release -- -maxcpucount -verbosity:minimal
+          cmake --build build --config Release -- -maxcpucount -verbosity:minimal
         else
-          cmake --build . -- --jobs=2 --keep-going
+          cmake --build build -- --jobs=2 --keep-going
         fi
