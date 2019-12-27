@@ -174,10 +174,7 @@ set(NET_CLIENT_SRC
     d_client.c
 )
 
-# TODO: make option
-set(BUILD_GL TRUE)
-
-if(BUILD_GL)
+if(OPENGL_FOUND AND OPENGL_GLU_FOUND)
     set(USE_GL_SRC
         gl_clipper.c
         gl_detail.c
