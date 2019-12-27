@@ -36,4 +36,13 @@
 #cmakedefine HAVE_NET
 #cmakedefine USE_SDL_NET
 
-#cmakedefine HAVE_ZLIB
+#cmakedefine HAVE_LIBZ
+
+#cmakedefine SIMPLECHECKS
+#cmakedefine ZONEIDCHECK
+
+#cmakedefine RANGECHECK
+#cmakedefine INSTRUMENTED
+#cmakedefine TIMEDIAG
+#cmakedefine HEAPCHECK
+#cmakedefine HEAPDUMP

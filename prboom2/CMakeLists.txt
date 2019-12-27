@@ -26,45 +26,52 @@ check_include_file("sys/wait.h" HAVE_SYS_WAIT_H)
 check_include_file("unistd.h" HAVE_UNISTD_H)
 check_include_file("asm/byteorder.h" HAVE_ASM_BYTEORDER_H)
 
-find_package(OpenGL)
-if(OPENGL_FOUND)
-    # TODO: make option
-    set(GL_DOOM TRUE)
-endif()
-if (OPENGL_GLU_FOUND)
-    # TODO: make options
-    set(USE_GLU_IMAGESCALE TRUE)
-    set(USE_GLU_MIPMAP TRUE)
-    set(USE_GLU_TESS TRUE)
+option(ENABLE_GL "Enable OpenGL rendering code" ON)
+if(ENABLE_GL)
+    find_package(OpenGL)
+    if(OPENGL_FOUND)
+        set(GL_DOOM TRUE)
+    endif()
+    if(OPENGL_GLU_FOUND)
+        set(USE_GLU_IMAGESCALE TRUE)
+        set(USE_GLU_MIPMAP TRUE)
+        set(USE_GLU_TESS TRUE)
+    endif()
 endif()
 
 find_package(SDL2 REQUIRED)
-if(SDL2_FOUND)
-    # TODO: check for SDL_JoystickGetAxis
+
+option(WITH_IMAGE "Use SDL2_image if available" ON)
+if(WITH_IMAGE)
+    find_package(SDL2_image)
+    if(SDL2_IMAGE_FOUND)
+        set(HAVE_LIBSDL2_IMAGE TRUE)
+    endif()
 endif()
 
-# TODO: make option, check function
-find_package(SDL2_image)
-if(SDL2_IMAGE_FOUND)
-    set(HAVE_LIBSDL2_IMAGE TRUE)
+option(WITH_MIXER "Use SDL2_mixer if available" ON)
+if(WITH_MIXER)
+    find_package(SDL2_mixer)
+    if(SDL2_MIXER_FOUND)
+        set(HAVE_LIBSDL2_MIXER TRUE)
+    endif()
 endif()
 
-# TODO: make option, check function 
-find_package(SDL2_mixer)
-if(SDL2_MIXER_FOUND)
-    set(HAVE_LIBSDL2_MIXER TRUE)
+option(WITH_NET "Use SDL2_net if available" ON)
+if(WITH_NET)
+    find_package(SDL2_net)
+    if(SDL2_NET_FOUND)
+        set(HAVE_NET TRUE)
+        set(USE_SDL_NET TRUE)
+    endif()
 endif()
 
-# TODO: make option, check function
-find_package(SDL2_net)
-if(SDL2_NET_FOUND)
-    set(HAVE_NET TRUE)
-    set(USE_SDL_NET TRUE)
-endif()
-
-find_package(zlib)
-if(ZLIB_FOUND)
-    set(HAVE_ZLIB TRUE)
+option(WITH_ZLIB "Use ZLIB if available" ON)
+if(WITH_ZLIB)
+    find_package(ZLIB)
+    if(ZLIB_FOUND)
+        set(HAVE_LIBZ TRUE)
+    endif()
 endif()
 
 # TODO: other dependencies
@@ -73,6 +80,18 @@ endif()
 # ...
 
 set(DOOMWADDIR "${CMAKE_INSTALL_PREFIX}/share/games/doom" CACHE PATH "Path to install prboom.wad and look for other WAD files")
+
+option(SIMPLECHECKS "Enable checks which only impose significant overhead if a posible error is detected" ON)
+option(ZONEIDCHECK "Enable id checks on zone blocks, to detect corrupted and illegally freed blocks" ON)
+
+# Debug options, disabled by default
+option(RANGECHECK "Enable internal range checking" OFF)
+option(INSTRUMENTED "Enable real-time memory allocation statistics, and extra debugging features" OFF)
+option(TIMEDIAG "Enable creation of time stamps each time a lump is locked, and reporting of lumps locked for long periods of time" OFF)
+option(HEAPCHECK "Turn on continuous heap checking (very slow)" OFF)
+option(HEAPDUMP "Turn on dumping the heap state for debugging" OFF)
+
+# TODO: --enable-profile
 
 configure_file(cmake/config.h.cin config.h)
 
