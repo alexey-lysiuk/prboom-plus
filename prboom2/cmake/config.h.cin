@@ -30,13 +30,14 @@
 #cmakedefine USE_GLU_TESS
 
 #cmakedefine HAVE_LIBSDL2_IMAGE
-
 #cmakedefine HAVE_LIBSDL2_MIXER
-
 #cmakedefine HAVE_NET
 #cmakedefine USE_SDL_NET
 
+#cmakedefine HAVE_LIBPCREPOSIX
 #cmakedefine HAVE_LIBZ
+#cmakedefine HAVE_LIBMAD
+#cmakedefine HAVE_LIBPORTMIDI
 
 #cmakedefine SIMPLECHECKS
 #cmakedefine ZONEIDCHECK

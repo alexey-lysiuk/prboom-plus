@@ -66,6 +66,14 @@ if(WITH_NET)
     endif()
 endif()
 
+option(WITH_PCRE "Use PCRE if available" ON)
+if(WITH_PCRE)
+    find_package(PCRE)
+    if(PCRE_FOUND)
+        set(HAVE_LIBPCREPOSIX TRUE)
+    endif()
+endif()
+
 option(WITH_ZLIB "Use ZLIB if available" ON)
 if(WITH_ZLIB)
     find_package(ZLIB)
@@ -74,10 +82,26 @@ if(WITH_ZLIB)
     endif()
 endif()
 
+option(WITH_MAD "Use libmad if available" ON)
+if(WITH_MAD)
+    find_package(LibMad)
+    if(LIBMAD_FOUND)
+        set(HAVE_LIBMAD TRUE)
+    endif()
+endif()
+
 # TODO: other dependencies
-# pcre
-# mad
-# ...
+# fluidsynth
+# dumb
+# vorbisfile
+
+option(WITH_PORTMIDI "Use PortMidi if available" ON)
+if(WITH_PORTMIDI)
+    find_package(PortMidi)
+    if(PortMidi_FOUND)
+        set(HAVE_LIBPORTMIDI TRUE)
+    endif()
+endif()
 
 set(DOOMWADDIR "${CMAKE_INSTALL_PREFIX}/share/games/doom" CACHE PATH "Path to install prboom.wad and look for other WAD files")
 
