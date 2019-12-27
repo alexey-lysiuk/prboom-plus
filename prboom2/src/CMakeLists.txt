@@ -320,6 +320,7 @@ if(SDL2_MIXER_FOUND)
     target_link_libraries(prboom-plus PRIVATE ${SDL2_MIXER_LIBRARIES})
 endif()
 ApplySDL2NetOptions(prboom-plus)
+add_dependencies(prboom-plus prboomwad)
 
 
 # PrBoom-Plus server executable

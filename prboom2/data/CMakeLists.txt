@@ -70,10 +70,8 @@ set(TABLES
     lumps/m_mark.lmp
 )
 
-# TODO: make option
-set(DOGS TRUE)
-# TODO: make option
-set(NONFREE_GRAPHICS TRUE)
+option(DOGS "Enable support for helper dogs" TRUE)
+option(NONFREE_GRAPHICS "Build prboom-plus.wad with non-free graphics lumps" TRUE)
 
 set(SOUNDS "")
 
@@ -519,5 +517,4 @@ add_custom_command(
     COMMAND rdatawad -I "${CMAKE_CURRENT_SOURCE_DIR}" ${WAD_CMDLINE} -o "${WAD_DATA_PATH}"
     DEPENDS rdatawad ${WAD_SRC}
 )
-# TODO: remove all and add to executable as dependency
-add_custom_target(prboomwad ALL DEPENDS ${WAD_DATA_PATH})
+add_custom_target(prboomwad DEPENDS ${WAD_DATA_PATH})
