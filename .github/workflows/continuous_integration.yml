@@ -83,4 +83,9 @@ jobs:
           cmake --build . -- --jobs=2 --keep-going
         fi
 
+    - name: List Build Directory
+      if: always()
+      shell: bash
+      run: ls -lR build
+
 # TODO: package artifacts
