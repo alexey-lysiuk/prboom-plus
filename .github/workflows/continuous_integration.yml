@@ -13,27 +13,32 @@ jobs:
         - {
             name: "Visual Studio 64-bit",
             os: windows-latest,
-            extra_options: "-DCMAKE_BUILD_TYPE=Release -A x64"
+            build_type: "Release",
+            extra_options: "-A x64"
           }
         - {
             name: "Visual Studio 32-bit",
             os: windows-latest,
-            extra_options: "-DCMAKE_BUILD_TYPE=Release -A Win32"
+            build_type: "Release",
+            extra_options: "-A Win32"
           }
         - {
             name: "Linux GCC",
             os: ubuntu-latest,
-            extra_options: "-DCMAKE_BUILD_TYPE=Release"
+            build_type: "Release",
+            extra_options: ""
           }
         - {
             name: "Linux Clang",
             os: ubuntu-latest,
-            extra_options: "-DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=/usr/bin/clang -DCMAKE_CXX_COMPILER=/usr/bin/clang++"
+            build_type: "Release",
+            extra_options: "-DCMAKE_C_COMPILER=/usr/bin/clang -DCMAKE_CXX_COMPILER=/usr/bin/clang++"
           }
         - {
             name: "macOS Clang",
             os: macos-latest,
-            extra_options: "-DCMAKE_BUILD_TYPE=Release"
+            build_type: "Release",
+            extra_options: ""
           }
 
     steps:
@@ -71,7 +76,7 @@ jobs:
           declare -x SDL2MIXERDIR="`pwd`/SDL2_mixer-2.0.4"
           declare -x SDL2NETDIR="`pwd`/SDL2_net-2.0.1"
         fi
-        cmake ${{ matrix.config.extra_options }} ../prboom2
+        cmake -DCMAKE_BUILD_TYPE=${{ matrix.config.build_type }} ${{ matrix.config.extra_options }} ../prboom2
 
     - name: Build
       shell: bash
