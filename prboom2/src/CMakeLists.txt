@@ -296,8 +296,6 @@ set(PRBOOM_PLUS_SOURCES
     ${EXTRA_FILES}
 )
 
-add_definitions(-DHAVE_CONFIG_H)
-
 add_executable(prboom-plus WIN32 ${PRBOOM_PLUS_SOURCES})
 target_include_directories(prboom-plus PRIVATE
     ${SDL2_INCLUDE_DIRS}
