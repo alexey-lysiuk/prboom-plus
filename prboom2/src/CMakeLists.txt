@@ -311,7 +311,7 @@ target_link_libraries(prboom-plus PRIVATE
     ${SDL2_LIBRARIES}
 )
 set_target_properties(prboom-plus PROPERTIES
-    RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}
+    RUNTIME_OUTPUT_DIRECTORY ${PRBOOM_OUTPUT_PATH}
 )
 if(SDL2_IMAGE_FOUND)
     target_include_directories(prboom-plus PRIVATE ${SDL2_IMAGE_INCLUDE_DIRS})
@@ -358,6 +358,7 @@ if(MSVC)
     )
     add_custom_command(TARGET prboom-plus POST_BUILD
         COMMAND "mt.exe" -manifest \"${CMAKE_CURRENT_SOURCE_DIR}\\..\\ICONS\\prboom-plus.exe.manifest\" -outputresource:\"$<TARGET_FILE:prboom-plus>\"\;\#1
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different ${WAD_DATA_PATH} $<TARGET_FILE_DIR:prboom-plus>
     )
 endif()
 
@@ -397,7 +398,7 @@ if(BUILD_SERVER)
     )
     set_target_properties(prboom-plus-game-server PROPERTIES
         COMPILE_DEFINITIONS PRBOOM_SERVER
-        RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}
+        RUNTIME_OUTPUT_DIRECTORY ${PRBOOM_OUTPUT_PATH}
     )
     ApplySDL2NetOptions(prboom-plus-game-server)
 endif()
@@ -459,14 +460,14 @@ if(APPLE)
         LINK_FLAGS "-framework Cocoa"
         MACOSX_BUNDLE_INFO_PLIST "${CMAKE_CURRENT_SOURCE_DIR}/MAC/Info.plist"
         OUTPUT_NAME "Launcher"
-        RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}
+        RUNTIME_OUTPUT_DIRECTORY ${PRBOOM_OUTPUT_PATH}
         XCODE_ATTRIBUTE_CODE_SIGN_IDENTITY ""
     )
     add_dependencies(prboom-plus-launcher prboom-plus)
 
     add_custom_command(TARGET prboom-plus-launcher POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_if_different $<TARGET_FILE:prboom-plus> $<TARGET_FILE_DIR:prboom-plus-launcher>
-        # TODO: copy .wad
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different ${WAD_DATA_PATH} $<TARGET_FILE_DIR:prboom-plus-launcher>
     )
 
     if(BUILD_SERVER)
@@ -475,6 +476,4 @@ if(APPLE)
             COMMAND ${CMAKE_COMMAND} -E copy_if_different $<TARGET_FILE:prboom-plus-game-server> $<TARGET_FILE_DIR:prboom-plus-launcher>
         )
     endif()
-
-    # message($<TARGET_FILE_DIR:prboom-plus>)
 endif()

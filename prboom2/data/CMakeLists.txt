@@ -20,8 +20,6 @@ target_include_directories(rdatawad PRIVATE ${CMAKE_BINARY_DIR})
 
 # PrBoom-Plus internal WAD
 
-set(WAD_DATA prboom-plus.wad)
-
 set(PALETTE
     palette.rgb
 )
@@ -511,7 +509,6 @@ set(WAD_CMDLINE
     -marker SS_START -sprites ${SPRITEP} -marker SS_END
 )
 
-set(WAD_DATA_PATH "${CMAKE_BINARY_DIR}/${WAD_DATA}")
 add_custom_command(
     OUTPUT "${WAD_DATA_PATH}"
     COMMAND rdatawad -I "${CMAKE_CURRENT_SOURCE_DIR}" ${WAD_CMDLINE} -o "${WAD_DATA_PATH}"

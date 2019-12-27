@@ -146,5 +146,10 @@ else()
     # TODO: GCC/Clang options
 endif()
 
+set(PRBOOM_OUTPUT_PATH ${CMAKE_BINARY_DIR})
+
+set(WAD_DATA prboom-plus.wad)
+set(WAD_DATA_PATH "${PRBOOM_OUTPUT_PATH}/${WAD_DATA}")
+
 add_subdirectory(data)
 add_subdirectory(src)
