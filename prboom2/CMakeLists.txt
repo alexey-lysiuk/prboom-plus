@@ -90,10 +90,29 @@ if(WITH_MAD)
     endif()
 endif()
 
-# TODO: other dependencies
-# fluidsynth
-# dumb
-# vorbisfile
+option(WITH_FLUIDSYNTH "Use FluidSynth if available" ON)
+if(WITH_FLUIDSYNTH)
+    find_package(FluidSynth)
+    if(FLUIDSYNTH_FOUND)
+        set(HAVE_LIBFLUIDSYNTH TRUE)
+    endif()
+endif()
+
+option(WITH_DUMB "Use DUMB if available" ON)
+if(WITH_DUMB)
+    find_package(DUMB)
+    if(DUMB_FOUND)
+        set(HAVE_LIBDUMB TRUE)
+    endif()
+endif()
+
+option(WITH_VORBISFILE "Use vorbisfile if available" ON)
+if(WITH_VORBISFILE)
+    find_package(Vorbis)
+    if(VORBIS_FOUND)
+        set(HAVE_LIBVORBISFILE TRUE)
+    endif()
+endif()
 
 option(WITH_PORTMIDI "Use PortMidi if available" ON)
 if(WITH_PORTMIDI)
