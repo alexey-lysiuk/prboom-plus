@@ -293,6 +293,13 @@ set(PRBOOM_PLUS_SOURCES
     ${EXTRA_FILES}
 )
 
+if(WIN32)
+    set(PRBOOM_PLUS_SOURCES
+        ${PRBOOM_PLUS_SOURCES}
+        ../ICONS/icons.rc
+    )
+endif()
+
 add_executable(prboom-plus WIN32 ${PRBOOM_PLUS_SOURCES})
 target_include_directories(prboom-plus PRIVATE
     ${SDL2_INCLUDE_DIRS}
@@ -344,6 +351,15 @@ if(PortMidi_FOUND)
     target_link_libraries(prboom-plus PRIVATE ${PORTMIDI_LIBRARIES})
 endif()
 add_dependencies(prboom-plus prboomwad)
+
+if(MSVC)
+    set_target_properties(prboom-plus PROPERTIES
+        LINK_FLAGS "/MANIFEST:NO"
+    )
+    add_custom_command(TARGET prboom-plus POST_BUILD
+        COMMAND "mt.exe" -manifest \"${CMAKE_CURRENT_SOURCE_DIR}\\..\\ICONS\\prboom-plus.exe.manifest\" -outputresource:\"$<TARGET_FILE:prboom-plus>\"\;\#1
+    )
+endif()
 
 
 # PrBoom-Plus server executable
