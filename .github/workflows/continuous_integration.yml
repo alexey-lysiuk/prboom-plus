@@ -13,12 +13,12 @@ jobs:
         - {
             name: "Visual Studio 64-bit",
             os: windows-latest,
-            extra_options: "-DCMAKE_BUILD_TYPE=Release -A 64"
+            extra_options: "-DCMAKE_BUILD_TYPE=Release -A x64"
           }
         - {
             name: "Visual Studio 32-bit",
             os: windows-latest,
-            extra_options: "-DCMAKE_BUILD_TYPE=Release -A 32"
+            extra_options: "-DCMAKE_BUILD_TYPE=Release -A Win32"
           }
         - {
             name: "Linux GCC",
@@ -28,7 +28,7 @@ jobs:
         - {
             name: "Linux Clang",
             os: ubuntu-latest,
-            extra_options: "-DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=/usr/bin/clang -DCMAKE_C_COMPILER=/usr/bin/clang++"
+            extra_options: "-DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=/usr/bin/clang -DCMAKE_CXX_COMPILER=/usr/bin/clang++"
           }
         - {
             name: "macOS Clang",
