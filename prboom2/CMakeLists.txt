@@ -13,8 +13,6 @@ include(CheckSymbolExists)
 
 check_symbol_exists(stricmp "string.h" HAVE_STRICMP)
 check_symbol_exists(strnicmp "string.h" HAVE_STRNICMP)
-# TODO: min, max
-
 check_symbol_exists(getopt "unistd.h" HAVE_GETOPT)
 check_symbol_exists(mmap "sys/mman.h" HAVE_MMAP)
 check_symbol_exists(sched_setaffinity "sched.h" HAVE_SCHED_SETAFFINITY)
@@ -134,8 +132,6 @@ option(TIMEDIAG "Enable creation of time stamps each time a lump is locked, and 
 option(HEAPCHECK "Turn on continuous heap checking (very slow)" OFF)
 option(HEAPDUMP "Turn on dumping the heap state for debugging" OFF)
 
-# TODO: --enable-profile
-
 configure_file(cmake/config.h.cin config.h)
 
 add_definitions(-DHAVE_CONFIG_H)
@@ -143,7 +139,13 @@ add_definitions(-DHAVE_CONFIG_H)
 if (MSVC)
     add_definitions("/D_CRT_SECURE_NO_WARNINGS")
 else()
-    # TODO: GCC/Clang options
+    set(CMAKE_C_FLAGS
+        ${CMAKE_C_FLAGS} "\
+        -Wall -Wextra -Wno-missing-field-initializers -Wwrite-strings -Wundef \
+        -Wbad-function-cast -Wcast-align -Wcast-qual -Wdeclaration-after-statement \
+        -Wpointer-arith -Wno-unused -Wno-switch -Wno-sign-compare -Wno-pointer-sign \
+        -ffast-math"
+    )
 endif()
 
 set(PRBOOM_OUTPUT_PATH ${CMAKE_BINARY_DIR})

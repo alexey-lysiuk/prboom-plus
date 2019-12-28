@@ -205,10 +205,7 @@ if(OPENGL_FOUND AND OPENGL_GLU_FOUND)
     )
 endif()
 
-# TODO: make option
-set(WAD_MMAP TRUE)
-
-if(WAD_MMAP)
+if(HAVE_MMAP)
     set(WAD_SRC w_mmap.c)
 else()
     set(WAD_SRC w_memcache.c)
@@ -230,14 +227,14 @@ set(SDLDOOM_SOURCES
     SDL/i_system.c
     SDL/i_video.c
 )
-#EXTRA_DIST = SDL_windows_main.c
 
 set(PCSOUND_SOURCES
     PCSOUND/pcsound.c
     PCSOUND/pcsound.h
+    PCSOUND/pcsound_linux.c
     PCSOUND/pcsound_sdl.c
+    PCSOUND/pcsound_win32.c
 )
-#EXTRA_DIST = pcsound_linux.c pcsound_win32.c
 
 set(TEXTSCREEN_SOURCES
     TEXTSCREEN/doomkeys.h
@@ -294,6 +291,7 @@ set(PRBOOM_PLUS_SOURCES
 )
 
 if(WIN32)
+    add_definitions("/DUSE_WIN32_PCSOUND_DRIVER")
     set(PRBOOM_PLUS_SOURCES
         ${PRBOOM_PLUS_SOURCES}
         ../ICONS/icons.rc
