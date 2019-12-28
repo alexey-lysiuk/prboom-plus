@@ -61,16 +61,18 @@ jobs:
         elif [[ "${{ runner.os }}" == 'macOS' ]]; then
           brew install sdl2 sdl2_image sdl2_mixer sdl2_net pcre mad fluidsynth dumb portmidi
         else
-          alias exdep="tar --strip-components=1 -C dependencies -xf"
+          #alias exdep="tar --strip-components=1 -C dependencies -xf"
+          echo '#!/bin/sh' >> exdep
+          echo 'tar --strip-components=1 -C dependencies -xf $1' >> exdep
           mkdir dependencies
           curl -LO https://libsdl.org/release/SDL2-devel-2.0.10-VC.zip
-          exdep SDL2-devel-2.0.10-VC.zip
+          ./exdep SDL2-devel-2.0.10-VC.zip
           curl -LO https://libsdl.org/projects/SDL_image/release/SDL2_image-devel-2.0.5-VC.zip
-          exdep SDL2_image-devel-2.0.5-VC.zip
+          ./exdep SDL2_image-devel-2.0.5-VC.zip
           curl -LO https://libsdl.org/projects/SDL_mixer/release/SDL2_mixer-devel-2.0.4-VC.zip
-          exdep SDL2_mixer-devel-2.0.4-VC.zip
+          ./exdep SDL2_mixer-devel-2.0.4-VC.zip
           curl -LO https://libsdl.org/projects/SDL_net/release/SDL2_net-devel-2.0.1-VC.zip
-          exdep SDL2_net-devel-2.0.1-VC.zip
+          ./exdep SDL2_net-devel-2.0.1-VC.zip
         fi
 
     - name: Configure
