@@ -203,6 +203,7 @@ if(OPENGL_FOUND AND OPENGL_GLU_FOUND)
         ${OPENGL_gl_LIBRARY}
         ${OPENGL_glu_LIBRARY}
     )
+    add_definitions("-DUSE_SHADERS -DUSE_FBO_TECHNIQUE")
 endif()
 
 if(HAVE_MMAP)
@@ -291,12 +292,16 @@ set(PRBOOM_PLUS_SOURCES
 )
 
 if(WIN32)
-    add_definitions("/DUSE_WIN32_PCSOUND_DRIVER")
+    add_definitions("/DUSE_WIN32_PCSOUND_DRIVER /DUSE_WINDOWS_LAUNCHER")
     set(PRBOOM_PLUS_SOURCES
         ${PRBOOM_PLUS_SOURCES}
         ../ICONS/icons.rc
+        e6y_launcher.c
+        e6y_launcher.h
     )
 endif()
+
+add_definitions("-DUSE_EXPERIMENTAL_MUSIC")
 
 add_executable(prboom-plus WIN32 ${PRBOOM_PLUS_SOURCES})
 target_include_directories(prboom-plus PRIVATE
