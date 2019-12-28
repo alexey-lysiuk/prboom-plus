@@ -61,19 +61,19 @@ jobs:
         elif [[ "${{ runner.os }}" == 'macOS' ]]; then
           brew install sdl2 sdl2_image sdl2_mixer sdl2_net pcre mad fluidsynth dumb portmidi
         else
-          mkdir dependencies
+          #mkdir dependencies
           curl -LO https://libsdl.org/release/SDL2-devel-2.0.10-VC.zip
           7z x SDL2-devel-2.0.10-VC.zip
-          mv SDL2-2.0.10/* dependencies
+          mv SDL2-2.0.10 dependencies
           curl -LO https://libsdl.org/projects/SDL_image/release/SDL2_image-devel-2.0.5-VC.zip
           7z x SDL2_image-devel-2.0.5-VC.zip
-          mv SDL2_image-2.0.5/* dependencies
+          cp -R SDL2_image-2.0.5/* dependencies
           curl -LO https://libsdl.org/projects/SDL_mixer/release/SDL2_mixer-devel-2.0.4-VC.zip
           7z x SDL2_mixer-devel-2.0.4-VC.zip
-          mv SDL2_mixer-2.0.4/* dependencies
+          cp -R SDL2_mixer-2.0.4/* dependencies
           curl -LO https://libsdl.org/projects/SDL_net/release/SDL2_net-devel-2.0.1-VC.zip
           7z x SDL2_net-devel-2.0.1-VC.zip
-          mv SDL2_net-2.0.1/* dependencies
+          cp -R SDL2_net-2.0.1/* dependencies
           # curl -LO https://sourceforge.net/projects/gnuwin32/files/pcre/7.0/pcre-7.0-lib.zip
           # 7z x pcre-7.0-lib.zip -odependencies
         fi
