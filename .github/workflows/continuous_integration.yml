@@ -64,7 +64,7 @@ jobs:
           mkdir dependencies
           curl -LO https://libsdl.org/release/SDL2-devel-2.0.10-VC.zip
           7z x SDL2-devel-2.0.10-VC.zip
-          cp -R SDL2-2.0.10 dependencies
+          cp -R SDL2-2.0.10/* dependencies
           curl -LO https://libsdl.org/projects/SDL_image/release/SDL2_image-devel-2.0.5-VC.zip
           7z x SDL2_image-devel-2.0.5-VC.zip
           cp -R SDL2_image-2.0.5/* dependencies
