@@ -24,27 +24,27 @@ jobs:
             extra_options: "-A Win32",
             package_name: "vs_win32"
           }
-        # - {
-        #     name: "Linux GCC",
-        #     os: ubuntu-latest,
-        #     build_type: "Release",
-        #     extra_options: "",
-        #     package_name: "linux_gcc"
-        #   }
-        # - {
-        #     name: "Linux Clang",
-        #     os: ubuntu-latest,
-        #     build_type: "Release",
-        #     extra_options: "-DCMAKE_C_COMPILER=/usr/bin/clang -DCMAKE_CXX_COMPILER=/usr/bin/clang++",
-        #     package_name: "linux_clang"
-        #   }
-        # - {
-        #     name: "macOS Clang",
-        #     os: macos-latest,
-        #     build_type: "Release",
-        #     extra_options: "",
-        #     package_name: "macos"
-        #   }
+        - {
+            name: "Linux GCC",
+            os: ubuntu-latest,
+            build_type: "Release",
+            extra_options: "",
+            package_name: "linux_gcc"
+          }
+        - {
+            name: "Linux Clang",
+            os: ubuntu-latest,
+            build_type: "Release",
+            extra_options: "-DCMAKE_C_COMPILER=/usr/bin/clang -DCMAKE_CXX_COMPILER=/usr/bin/clang++",
+            package_name: "linux_clang"
+          }
+        - {
+            name: "macOS Clang",
+            os: macos-latest,
+            build_type: "Release",
+            extra_options: "",
+            package_name: "macos"
+          }
 
     steps:
     - uses: actions/checkout@v1
@@ -61,10 +61,10 @@ jobs:
         elif [[ "${{ runner.os }}" == 'macOS' ]]; then
           brew install sdl2 sdl2_image sdl2_mixer sdl2_net pcre mad fluidsynth dumb portmidi
         else
-          #mkdir dependencies
+          mkdir dependencies
           curl -LO https://libsdl.org/release/SDL2-devel-2.0.10-VC.zip
           7z x SDL2-devel-2.0.10-VC.zip
-          mv SDL2-2.0.10 dependencies
+          cp -R SDL2-2.0.10 dependencies
           curl -LO https://libsdl.org/projects/SDL_image/release/SDL2_image-devel-2.0.5-VC.zip
           7z x SDL2_image-devel-2.0.5-VC.zip
           cp -R SDL2_image-2.0.5/* dependencies
@@ -74,24 +74,17 @@ jobs:
           curl -LO https://libsdl.org/projects/SDL_net/release/SDL2_net-devel-2.0.1-VC.zip
           7z x SDL2_net-devel-2.0.1-VC.zip
           cp -R SDL2_net-2.0.1/* dependencies
-          # curl -LO https://sourceforge.net/projects/gnuwin32/files/pcre/7.0/pcre-7.0-lib.zip
-          # 7z x pcre-7.0-lib.zip -odependencies
         fi
 
     - name: Configure
       shell: bash
       run: |
         cd build
-        if [[ "${{ runner.os }}" == 'Windows' ]]; then
-          # declare -x SDL2DIR="`pwd`/SDL2-2.0.10"
-          # declare -x SDL2IMAGEDIR="`pwd`/SDL2_image-2.0.5"
-          # declare -x SDL2MIXERDIR="`pwd`/SDL2_mixer-2.0.4"
-          # declare -x SDL2NETDIR="`pwd`/SDL2_net-2.0.1"
-          # declare -x SDL2NETDIR="`pwd`/SDL2_net-2.0.1"
-          # declare -x DEPENDENCIES="${DEPENDENCIES} -DPCRE_INCLUDE_DIR=`pwd`
-          declare -x DEPENDENCIES="-DCMAKE_PREFIX_PATH=`pwd`/dependencies"
-        fi
-        cmake -DCMAKE_BUILD_TYPE=${{ matrix.config.build_type }} ${{ matrix.config.extra_options }} ${DEPENDENCIES} ../prboom2
+        cmake \
+          -DCMAKE_BUILD_TYPE=${{ matrix.config.build_type }} \
+          -DCMAKE_PREFIX_PATH="`pwd`/dependencies" \
+          ${{ matrix.config.extra_options }} \
+          ../prboom2
 
     - name: Build
       shell: bash
