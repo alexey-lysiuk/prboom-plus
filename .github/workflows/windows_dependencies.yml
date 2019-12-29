@@ -32,12 +32,12 @@ jobs:
       shell: cmd
       run: |
         vcpkg update
-        vcpkg install sdl2-image sdl2-mixer sdl2-net pcre zlib fluidsynth portmidi --triplet ${{ matrix.config.triplet }}
+        vcpkg install sdl2-image sdl2-mixer sdl2-net pcre zlib fluidsynth libvorbis portmidi --triplet ${{ matrix.config.triplet }}
 
     - name: Export
       shell: cmd
       run: |
-        vcpkg export sdl2-image sdl2-mixer sdl2-net pcre zlib fluidsynth portmidi --zip --triplet ${{ matrix.config.triplet }}
+        vcpkg export sdl2-image sdl2-mixer sdl2-net pcre zlib fluidsynth libvorbis portmidi --zip --triplet ${{ matrix.config.triplet }}
         md artifact
         move %VCPKG_INSTALLATION_ROOT%\*.zip artifact
 
