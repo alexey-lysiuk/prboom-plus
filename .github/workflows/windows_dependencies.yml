@@ -29,18 +29,21 @@ jobs:
 
     steps:
     - name: Install
+      shell: bash
       run: |
         vcpkg update
-        vcpkg install sdl2-net --triplet ${{ matrix.config.triplet }}
+        vcpkg install zlib --triplet ${{ matrix.config.triplet }}
 
     - name: Export
       shell: bash
       run: |
-        vcpkg export sdl2-net --7zip --triplet ${{ matrix.config.triplet }}
+        vcpkg export zlib --7zip --triplet ${{ matrix.config.triplet }}
+        mkdir artifact
+        cp ${VCPKG_INSTALLATION_ROOT}/*.7z artifact/
 
-    # - name: Upload
-    #   uses: actions/upload-artifact@v1
-    #   with:
-    #     path: build/package
-    #     name: ${{ matrix.config.triplet }}
+    - name: Upload
+      uses: actions/upload-artifact@v1
+      with:
+        path: artifact
+        name: ${{ matrix.config.triplet }}
 
