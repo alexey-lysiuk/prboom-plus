@@ -1,0 +1,47 @@
+name: Windows Dependencies
+
+on:
+  push:
+    branches:
+    - windows_dependencies
+  pull_request:
+    branches:
+    - windows_dependencies
+
+jobs:
+  build:
+    name: ${{ matrix.config.name }}
+    runs-on: ${{ matrix.config.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+        - {
+            name: "Visual Studio 64-bit",
+            os: windows-latest,
+            triplet: x64-windows
+          }
+        - {
+            name: "Visual Studio 32-bit",
+            os: windows-latest,
+            triplet: x86-windows
+          }
+
+    steps:
+    - name: Install
+      run: |
+        # set VCPKG_DEFAULT_TRIPLET=
+        vcpkg update
+        vcpkg install sdl2_net --triplet ${{ matrix.config.triplet }}
+
+    - name: Export
+      shell: bash
+      run: |
+        vcpkg export sdl2_net --triplet ${{ matrix.config.triplet }}
+
+    # - name: Upload
+    #   uses: actions/upload-artifact@v1
+    #   with:
+    #     path: build/package
+    #     name: ${{ matrix.config.triplet }}
+

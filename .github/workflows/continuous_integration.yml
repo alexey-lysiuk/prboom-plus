@@ -1,6 +1,12 @@
 name: Continuous Integration
 
-on: [push, pull_request]
+on:
+  push:
+    branches-ignore:
+    - windows_dependencies
+  pull_request:
+    branches-ignore:
+    - windows_dependencies
 
 jobs:
   build:
