@@ -31,12 +31,12 @@ jobs:
     - name: Install
       run: |
         vcpkg update
-        vcpkg install sdl2_net
+        vcpkg install sdl2-net --triplet ${{ matrix.config.triplet }}
 
     - name: Export
       shell: bash
       run: |
-        vcpkg export sdl2_net
+        vcpkg export sdl2-net --triplet ${{ matrix.config.triplet }}
 
     # - name: Upload
     #   uses: actions/upload-artifact@v1
