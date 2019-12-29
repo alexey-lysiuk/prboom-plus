@@ -32,18 +32,14 @@ jobs:
       shell: cmd
       run: |
         vcpkg update
-        vcpkg install zlib --triplet ${{ matrix.config.triplet }}
+        vcpkg install sdl2-image sdl2-mixer sdl2-net pcre zlib fluidsynth portmidi --triplet ${{ matrix.config.triplet }}
 
     - name: Export
       shell: cmd
       run: |
-        vcpkg export zlib --7zip --triplet ${{ matrix.config.triplet }}
+        vcpkg export sdl2-image sdl2-mixer sdl2-net pcre zlib fluidsynth portmidi --zip --triplet ${{ matrix.config.triplet }}
         md artifact
-        dir .
-        echo %VCPKG_INSTALLATION_ROOT%
-        dir %VCPKG_INSTALLATION_ROOT%
-        echo "move %VCPKG_INSTALLATION_ROOT%\*.7z artifact"
-        move %VCPKG_INSTALLATION_ROOT%\*.7z artifact
+        move %VCPKG_INSTALLATION_ROOT%\*.zip artifact
 
     - name: Upload
       uses: actions/upload-artifact@v1
