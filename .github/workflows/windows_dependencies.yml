@@ -29,17 +29,17 @@ jobs:
 
     steps:
     - name: Install
-      shell: bash
+      shell: cmd
       run: |
         vcpkg update
         vcpkg install zlib --triplet ${{ matrix.config.triplet }}
 
     - name: Export
-      shell: bash
+      shell: cmd
       run: |
         vcpkg export zlib --7zip --triplet ${{ matrix.config.triplet }}
-        mkdir artifact
-        cp ${VCPKG_INSTALLATION_ROOT}/*.7z artifact/
+        md artifact
+        copy ${VCPKG_INSTALLATION_ROOT}/*.7z artifact/
 
     - name: Upload
       uses: actions/upload-artifact@v1
