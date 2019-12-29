@@ -39,7 +39,11 @@ jobs:
       run: |
         vcpkg export zlib --7zip --triplet ${{ matrix.config.triplet }}
         md artifact
-        move %VCPKG_INSTALLATION_ROOT%/*.7z artifact
+        dir .
+        echo %VCPKG_INSTALLATION_ROOT%
+        dir %VCPKG_INSTALLATION_ROOT%
+        echo "move %VCPKG_INSTALLATION_ROOT%\*.7z artifact"
+        move %VCPKG_INSTALLATION_ROOT%\*.7z artifact
 
     - name: Upload
       uses: actions/upload-artifact@v1
