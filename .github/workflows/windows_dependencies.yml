@@ -36,7 +36,7 @@ jobs:
     - name: Export
       shell: bash
       run: |
-        vcpkg export sdl2-net --triplet ${{ matrix.config.triplet }}
+        vcpkg export sdl2-net --7zip --triplet ${{ matrix.config.triplet }}
 
     # - name: Upload
     #   uses: actions/upload-artifact@v1
