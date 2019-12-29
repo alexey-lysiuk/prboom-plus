@@ -32,12 +32,12 @@ jobs:
       run: |
         # set VCPKG_DEFAULT_TRIPLET=
         vcpkg update
-        vcpkg install sdl2_net --triplet ${{ matrix.config.triplet }}
+        vcpkg --triplet ${{ matrix.config.triplet }} install sdl2_net
 
     - name: Export
       shell: bash
       run: |
-        vcpkg export sdl2_net --triplet ${{ matrix.config.triplet }}
+        vcpkg  --triplet ${{ matrix.config.triplet }} export sdl2_net
 
     # - name: Upload
     #   uses: actions/upload-artifact@v1
