@@ -42,7 +42,7 @@ jobs:
       id: vars
       shell: cmd
       run: |
-        echo "::set-output name=common_options::sdl2-image sdl2-mixer sdl2-net pcre zlib libmad fluidsynth libvorbis portmidi --triplet ${{ matrix.config.triplet }}"
+        echo ::set-output name=common_options::sdl2-image sdl2-mixer sdl2-net pcre zlib libmad fluidsynth libvorbis portmidi --triplet ${{ matrix.config.triplet }}
 
     - name: Install
       shell: cmd
