@@ -78,14 +78,15 @@ jobs:
       shell: bash
       run: |
         cd build
-        cmake -DCMAKE_BUILD_TYPE=${{ matrix.config.build_type }} ${{ matrix.config.extra_options }} ../prboom2
-
-    - name: Try again
-      if: failure()
-      shell: bash
-      run: |
-        cd build
+        # cmake -DCMAKE_BUILD_TYPE=${{ matrix.config.build_type }} ${{ matrix.config.extra_options }} ../prboom2
         cmake -DCMAKE_BUILD_TYPE=${{ matrix.config.build_type }} ${{ matrix.config.extra_options }} -DCMAKE_PREFIX_PATH=./dependencies/installed/x64-windows ../prboom2
+
+    # - name: Try again
+    #   if: failure()
+    #   shell: bash
+    #   run: |
+    #     cd build
+    #     cmake -DCMAKE_BUILD_TYPE=${{ matrix.config.build_type }} ${{ matrix.config.extra_options }} -DCMAKE_PREFIX_PATH=./dependencies/installed/x64-windows ../prboom2
 
     - name: Build
       shell: bash
