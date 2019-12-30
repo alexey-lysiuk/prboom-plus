@@ -37,6 +37,14 @@ jobs:
         xcopy .github\workflows\dumb %VCPKG_INSTALLATION_ROOT%\ports
         vcpkg install ${{ steps.vars.outputs.common_options }}
 
+    - name: Logs
+      if: always()
+      shell: cmd
+      run: |
+        type C:\vcpkg\buildtrees\dumb\install-${{ matrix.config.triplet }}-dbg-out.log
+        echo !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        type C:\vcpkg\buildtrees\dumb\install-${{ matrix.config.triplet }}-dbg-out-1.log
+
     - name: Export
       shell: cmd
       run: |
