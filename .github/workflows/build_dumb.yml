@@ -1,0 +1,50 @@
+name: Build DUMB
+
+jobs:
+  build:
+    name: ${{ matrix.config.name }}
+    runs-on: ${{ matrix.config.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+        - {
+            name: "Visual Studio 64-bit",
+            os: windows-latest,
+            triplet: x64-windows
+          }
+        - {
+            name: "Visual Studio 32-bit",
+            os: windows-latest,
+            triplet: x86-windows
+          }
+
+    steps:
+    - uses: actions/checkout@v1
+
+    - name: Configure
+      id: vars
+      shell: cmd
+      run: |
+        echo ::set-output name=common_options::dumb --triplet ${{ matrix.config.triplet }}
+
+    - name: Install
+      shell: cmd
+      run: |
+        vcpkg update
+        xcopy .github\workflows\dumb %VCPKG_INSTALLATION_ROOT%\ports
+        vcpkg install ${{ steps.vars.outputs.common_options }}
+
+    - name: Export
+      shell: cmd
+      run: |
+        vcpkg export ${{ steps.vars.outputs.common_options }} --zip
+        md artifact
+        move %VCPKG_INSTALLATION_ROOT%\*.zip artifact
+
+    - name: Upload
+      uses: actions/upload-artifact@v1
+      with:
+        path: artifact
+        name: ${{ matrix.config.triplet }}
+
