@@ -38,7 +38,7 @@ jobs:
         vcpkg install ${{ steps.vars.outputs.common_options }}
 
     - name: Logs
-      if: always()
+      if: failure()
       shell: cmd
       run: |
         type C:\vcpkg\buildtrees\dumb\install-${{ matrix.config.triplet }}-dbg-out.log
