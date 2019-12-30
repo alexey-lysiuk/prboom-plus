@@ -11,7 +11,10 @@ vcpkg_from_github(
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
-    OPTIONS -DBUILD_EXAMPLES=OFF -DBUILD_ALLEGRO4=OFF
+    PREFER_NINJA
+    OPTIONS
+        -DBUILD_EXAMPLES=OFF
+        -DBUILD_ALLEGRO4=OFF
 )
 
 vcpkg_install_cmake()
