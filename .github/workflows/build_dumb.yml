@@ -28,7 +28,8 @@ jobs:
       id: vars
       shell: cmd
       run: |
-        echo ::set-output name=common_options::dumb --triplet ${{ matrix.config.triplet }}
+        rem echo ::set-output name=common_options::dumb --triplet ${{ matrix.config.triplet }}
+        echo ::set-output name=common_options::zlib --triplet ${{ matrix.config.triplet }}
 
     - name: Install
       shell: cmd
