@@ -6,7 +6,9 @@ vcpkg_from_github(
     REF 2.0.3
     SHA512 18b10a507d69a754cdf97fbeae41c17f211a6ba1f166a822276bdb6769d3edc326919067a3f4d1247d6715d7a5a8276669d83b9427e7336c6d111593fb7e36cf
     HEAD_REF master
-    PATCHES msvc-no-libm.patch
+    PATCHES
+        fix-cflags.patch
+        msvc-no-libm.patch
 )
 
 vcpkg_configure_cmake(
