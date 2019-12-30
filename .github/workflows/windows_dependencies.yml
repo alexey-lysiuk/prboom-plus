@@ -39,6 +39,7 @@ jobs:
 
     steps:
     - name: Configure
+      id: vars
       shell: cmd
       run: |
         echo ::set-output common_options="sdl2-image sdl2-mixer sdl2-net pcre zlib libmad fluidsynth libvorbis portmidi --triplet ${{ matrix.config.triplet }}"
@@ -47,12 +48,12 @@ jobs:
       shell: cmd
       run: |
         vcpkg update
-        vcpkg install ${{ common_options }}
+        vcpkg install ${{ steps.vars.outputs.common_options }}
 
     - name: Export
       shell: cmd
       run: |
-        vcpkg export ${{ common_options }} --zip
+        vcpkg export ${{ steps.vars.outputs.common_options }} --zip
         md artifact
         move %VCPKG_INSTALLATION_ROOT%\*.zip artifact
 
