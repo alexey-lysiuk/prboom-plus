@@ -61,7 +61,7 @@ jobs:
         mkdir build
         cd build
         if [[ "${{ runner.os }}" == 'Windows' ]]; then
-          curl -LO "https://github.com/coelckers/prboom-plus/releases/download/windows_dependencies/windows_dependencies.zip"
+          curl -LO "https://github.com/coelckers/prboom-plus/releases/download/windows_dependencies/windows_dependencies_test.zip"
           7z x windows_dependencies.zip -o..
         elif [[ "${{ runner.os }}" == 'Linux' ]]; then
           sudo apt update
