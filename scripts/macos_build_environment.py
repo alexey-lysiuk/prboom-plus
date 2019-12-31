@@ -8,25 +8,84 @@ import sys
 import urllib2
 
 
+def _make_directory(path):
+    if not os.path.exists(path):
+        os.makedirs(path)
+
+
+def _detect_cmake():
+    for cmake_exe in ('cmake', '/Applications/CMake.app/Contents/bin/cmake'):
+        try:
+            subprocess.check_output([cmake_exe, '--version'])
+        except (OSError, subprocess.CalledProcessError):
+            continue
+
+        return cmake_exe
+
+    return None
+
+
+class Configuration(object):
+    def __init__(self):
+        self_path = os.path.dirname(os.path.abspath(__file__))
+        root_path = os.path.abspath(self_path + os.sep + os.pardir)
+        build_path = root_path + os.sep + 'build_macos_dependencies'
+        self.prefix = root_path + os.sep + 'dependencies_macos'
+        bin_path = self.prefix + os.sep + 'bin'
+        include_path = self.prefix + os.sep + 'include'
+        lib_path = self.prefix + os.sep + 'lib'
+
+        _make_directory(build_path)
+        _make_directory(bin_path)
+        _make_directory(include_path)
+        _make_directory(lib_path)
+
+        os.chdir(build_path)
+
+        macos_min_ver = '10.9'
+        common_flags = '-mmacosx-version-min=' + macos_min_ver
+
+        sdk_path = root_path + os.sep + 'MacOSX' + macos_min_ver + '.sdk'
+        if os.path.exists(sdk_path):
+            common_flags += ' -isysroot ' + sdk_path
+
+        cflags = common_flags + ' -I' + include_path
+        ldflags = common_flags + ' -L' + lib_path
+
+        # Workaround for undefined symbol _AudioUnitSetParameter linker error with playwave from libSDL2_mixer
+        ldflags += ' -framework AudioUnit'
+
+        self.environment = os.environ
+        self.environment['PATH'] += ':' + bin_path
+        self.environment['CPPFLAGS'] = cflags
+        self.environment['CFLAGS'] = cflags
+        self.environment['CXXFLAGS'] = cflags
+        self.environment['OBJCFLAGS'] = cflags
+        self.environment['OBJCXXFLAGS'] = cflags
+        self.environment['LDFLAGS'] = ldflags
+
+        self.make_executable = 'make'
+        self.cmake_executable = _detect_cmake()
+
+
+configuration = Configuration()
+
+
 class Command(object):
     def __init__(self, *arguments):
         self._arguments = arguments
         self._previous = None
-        self._prerequisites = ()
 
-    def execute(self, workdir, environment):
+    def execute(self, workdir):
         if self._previous:
-            self._previous.execute(workdir, environment)
+            self._previous.execute(workdir)
 
-        subprocess.check_call(self._arguments, cwd=workdir, env=environment)
-
-    def prerequisites(self):
-        return (self._previous.prerequisites() if self._previous else ()) + self._prerequisites
+        subprocess.check_call(self._arguments, cwd=workdir, env=configuration.environment)
 
 
 class Configure(Command):
     def __init__(self, *arguments):
-        arguments = ('./configure', '--prefix=' + configuration.install_path) + configuration.configure_arguments + arguments
+        arguments = ('./configure', '--prefix=' + configuration.prefix) + arguments
         super(Configure, self).__init__(*arguments)
 
 
@@ -38,15 +97,14 @@ class ConfigureStatic(Configure):
 
 class CMake(Command):
     def __init__(self, *arguments):
-        arguments = (configuration.cmake_executable, '-DCMAKE_INSTALL_PREFIX=' + configuration.install_path) \
-               + configuration.cmake_arguments + arguments + ('.',)
+        arguments = (configuration.cmake_executable, '-DCMAKE_INSTALL_PREFIX=' + configuration.prefix) \
+               + arguments + ('.',)
         super(CMake, self).__init__(*arguments)
-        self._prerequisites = configuration.cmake_prerequisites
 
 
 class Make(Command):
     def __init__(self, *arguments):
-        arguments = (configuration.make_executable,) + configuration.make_arguments + arguments
+        arguments = (configuration.make_executable,) + arguments
         super(Make, self).__init__(*arguments)
 
 
@@ -79,9 +137,6 @@ Tool = ConfigureInstall
 
 
 class Package(object):
-    prefix = ''
-    environment = os.environ
-
     def __init__(self, name, source, checksum, commands=Library()):
         self.name = name
         self.source = source
@@ -98,9 +153,9 @@ class Package(object):
 
         if isinstance(self.commands, tuple) or isinstance(self.commands, list):
             for command in self.commands:
-                command.execute(self._work_path, Package.environment)
+                command.execute(self._work_path)
         else:
-            self.commands.execute(self._work_path, Package.environment)
+            self.commands.execute(self._work_path)
 
         self._work_path = None
         self._filename = None
@@ -179,57 +234,18 @@ def _calculate_checksum(filename):
     return checksum.hexdigest()
 
 
-def _setup_environment():
-    root_path = os.path.dirname(os.path.abspath(__file__))
-    build_path = os.path.abspath(root_path + os.sep + os.pardir + os.sep + 'build_macos_dependencies')
-
-    if not os.path.exists(build_path):
-        os.mkdir(build_path)
-
-    os.chdir(build_path)
-
-    Package.prefix = os.path.abspath(root_path + os.sep + os.pardir + os.sep + 'dependencies_macos')
-
-    macos_min_ver = '10.9'
-    common_flags = '-mmacosx-version-min=' + macos_min_ver
-
-    sdk_path = root_path + os.sep + 'MacOSX' + macos_min_ver + '.sdk'
-    if os.path.exists(sdk_path):
-        common_flags += ' -isysroot ' + sdk_path
-
-    include_path = Package.prefix + os.sep + 'include'
-    lib_path = Package.prefix + os.sep + 'lib'
-
-    os.makedirs(include_path)
-    os.makedirs(lib_path)
-
-    cflags = common_flags + ' -I' + include_path
-    ldflags = common_flags + ' -L' + lib_path
-
-    # Workaround for undefined symbol _AudioUnitSetParameter linker error with playwave from libSDL2_mixer
-    ldflags += ' -framework AudioUnit'
-
-    Package.environment['CPPFLAGS'] = cflags
-    Package.environment['CFLAGS'] = cflags
-    Package.environment['CXXFLAGS'] = cflags
-    Package.environment['OBJCFLAGS'] = cflags
-    Package.environment['OBJCXXFLAGS'] = cflags
-    Package.environment['LDFLAGS'] = ldflags
-
-
-_packages = (
+_packages = [
     # Dependencies of SDL2_mixer
     Package(
         name='ogg',
         source='https://downloads.xiph.org/releases/ogg/libogg-1.3.4.tar.gz',
         checksum='fe5670640bd49e828d64d2879c31cb4dde9758681bb664f9bdbf159a01b0c76e',
     ),
-# 
-#     Package(
-#         name='vorbis',
-#         source='https://downloads.xiph.org/releases/vorbis/libvorbis-1.3.6.tar.xz',
-#         checksum='af00bb5a784e7c9e69f56823de4637c350643deedaf333d0fa86ecdba6fcb415',
-#     ),
+    Package(
+        name='vorbis',
+        source='https://downloads.xiph.org/releases/vorbis/libvorbis-1.3.6.tar.xz',
+        checksum='af00bb5a784e7c9e69f56823de4637c350643deedaf333d0fa86ecdba6fcb415',
+    ),
 #     Package(
 #         name='FLAC',
 #         source='https://downloads.xiph.org/releases/flac/flac-1.3.3.tar.xz',
@@ -333,11 +349,18 @@ _packages = (
 #         source='https://www.libsdl.org/projects/SDL_net/release/SDL2_net-2.0.1.tar.gz',
 #         checksum='15ce8a7e5a23dafe8177c8df6e6c79b6749a03fff1e8196742d3571657609d21'
 #     )
-)
+]
 
 
 def _main():
-    _setup_environment()
+    if not configuration.cmake_executable:
+        cmake_package = Package(
+            name='cmake',
+            source='https://github.com/Kitware/CMake/releases/download/v3.16.2/cmake-3.16.2.tar.gz',
+            checksum='8c09786ec60ca2be354c29829072c38113de9184f29928eb9da8446a5f2ce6a9'
+        )
+        _packages.insert(0, cmake_package)
+        configuration.cmake_executable = 'cmake'
 
     for package in _packages:
         package.build()
