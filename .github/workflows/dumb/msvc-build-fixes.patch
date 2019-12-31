@@ -22,3 +22,16 @@
  
  if(USE_SSE)
      check_c_compiler_flag("-msse" "CC_HAS_MSSE")
+@@ -223,7 +223,11 @@
+     set_target_properties(dumb PROPERTIES INSTALL_NAME_DIR ${CMAKE_INSTALL_FULL_LIBDIR})
+ ENDIF(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+ 
+-target_link_libraries(dumb m)
++if(MSVC)
++    set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
++else()
++    target_link_libraries(dumb m)
++endif()
+ 
+ install(FILES ${PKG_CONFIG_FILE} DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
+ install(FILES ${INSTALL_HEADERS} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
