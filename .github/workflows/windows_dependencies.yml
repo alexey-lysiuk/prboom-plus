@@ -51,7 +51,7 @@ jobs:
       run: |
         xcopy .github\workflows\dumb %VCPKG_INSTALLATION_ROOT%\ports\dumb\
         xcopy .github\workflows\portmidi %VCPKG_INSTALLATION_ROOT%\ports\portmidi\ /y
-        xcopy .github\workflows\triplets %VCPKG_INSTALLATION_ROOT%\ports\triplets\
+        xcopy .github\workflows\triplets\*.* %VCPKG_INSTALLATION_ROOT%\ports\triplets\
         vcpkg update
         vcpkg install ${{ steps.vars.outputs.common_options }}
 
