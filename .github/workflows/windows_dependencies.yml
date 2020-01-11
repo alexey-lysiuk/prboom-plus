@@ -29,12 +29,12 @@ jobs:
         - {
             name: "Visual Studio 64-bit",
             os: windows-latest,
-            triplet: x64-windows
+            triplet: x64-windows-static
           }
         - {
             name: "Visual Studio 32-bit",
             os: windows-latest,
-            triplet: x86-windows
+            triplet: x86-windows-static
           }
 
     steps:
