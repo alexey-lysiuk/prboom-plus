@@ -31,11 +31,11 @@ jobs:
             os: windows-latest,
             triplet: x64-windows-crtstatic
           }
-        # - {
-            # name: "Visual Studio 32-bit",
-            # os: windows-latest,
-            # triplet: x86-windows-crtstatic
-          # }
+        - {
+            name: "Visual Studio 32-bit",
+            os: windows-latest,
+            triplet: x86-windows-crtstatic
+          }
 
     steps:
     - uses: actions/checkout@v1
@@ -51,17 +51,8 @@ jobs:
       run: |
         xcopy .github\workflows\ports\* %VCPKG_INSTALLATION_ROOT%\ports /s /y
         xcopy .github\workflows\triplets\* %VCPKG_INSTALLATION_ROOT%\triplets
-        rem dir %VCPKG_INSTALLATION_ROOT%\triplets
         vcpkg update
-        vcpkg install glib --triplet ${{ matrix.config.triplet }}
-        rem vcpkg install ${{ steps.vars.outputs.common_options }}
-
-    - name: Vcpkg
-      if: failure()
-      uses: actions/upload-artifact@v1
-      with:
-        path: "C:\\vcpkg"
-        name: ${{ matrix.config.triplet }}
+        vcpkg install ${{ steps.vars.outputs.common_options }}
 
     - name: Export
       shell: cmd
