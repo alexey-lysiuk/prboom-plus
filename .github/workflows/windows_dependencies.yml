@@ -58,6 +58,7 @@ jobs:
 
     - name: Vcpkg
       if: failure()
+      uses: actions/upload-artifact@v1
       with:
         path: "C:\vcpkg\triplets"
         name: ${{ matrix.config.triplet }}
