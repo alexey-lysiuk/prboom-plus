@@ -54,7 +54,7 @@ jobs:
         rem dir %VCPKG_INSTALLATION_ROOT%\triplets
         vcpkg update
         vcpkg install glib --triplet ${{ matrix.config.triplet }}
-        vcpkg install ${{ steps.vars.outputs.common_options }}
+        rem vcpkg install ${{ steps.vars.outputs.common_options }}
 
     - name: Vcpkg
       if: failure()
