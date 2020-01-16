@@ -60,7 +60,7 @@ jobs:
       if: failure()
       uses: actions/upload-artifact@v1
       with:
-        path: "C:\\vcpkg\\triplets"
+        path: "C:\\vcpkg"
         name: ${{ matrix.config.triplet }}
 
     - name: Export
