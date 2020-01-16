@@ -106,7 +106,7 @@ jobs:
       uses: actions/upload-artifact@v1
       with:
         path: build/package
-        name: ${{ matrix.config.package_name }}
+        name: prboom-plus-${{ matrix.config.package_name }}-${{ github.sha }}
 
     - name: List Build Directory
       if: always()
