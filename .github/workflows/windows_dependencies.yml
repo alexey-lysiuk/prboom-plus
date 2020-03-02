@@ -57,9 +57,9 @@ jobs:
     - name: Export
       shell: cmd
       run: |
-        vcpkg export ${{ steps.vars.outputs.common_options }} --zip
         md artifact
-        move %VCPKG_INSTALLATION_ROOT%\*.zip artifact
+        cd artifact
+        .github\workflows\copy_dependencies.cmd %VCPKG_INSTALLATION_ROOT%\installed\${{ matrix.config.triplet }}
 
     - name: Upload
       uses: actions/upload-artifact@v1
