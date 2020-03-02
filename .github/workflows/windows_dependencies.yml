@@ -58,8 +58,7 @@ jobs:
       shell: cmd
       run: |
         md artifact
-        cd artifact
-        .github\workflows\copy_dependencies.cmd %VCPKG_INSTALLATION_ROOT%\installed\${{ matrix.config.triplet }}
+        .github\workflows\copy_dependencies.cmd %VCPKG_INSTALLATION_ROOT%\installed\${{ matrix.config.triplet }} artifact
 
     - name: Upload
       uses: actions/upload-artifact@v1
