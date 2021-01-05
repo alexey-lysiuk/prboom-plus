@@ -87,7 +87,10 @@ function(target_architecture output_var)
         # Architecture defaults to i386 or ppc on OS X 10.5 and earlier, depending on the CPU type detected at runtime.
         # On OS X 10.6+ the default is x86_64 if the CPU supports it, i386 otherwise.
 
-        foreach(osx_arch ${CMAKE_OSX_ARCHITECTURES})
+        set(OSX_ARCH_LIST ${CMAKE_OSX_ARCHITECTURES})
+        separate_arguments(OSX_ARCH_LIST)
+
+        foreach(osx_arch ${OSX_ARCH_LIST})
             if("${osx_arch}" STREQUAL "ppc" AND ppc_support)
                 set(osx_arch_ppc TRUE)
             elseif("${osx_arch}" STREQUAL "i386")
@@ -96,6 +99,8 @@ function(target_architecture output_var)
                 set(osx_arch_x86_64 TRUE)
             elseif("${osx_arch}" STREQUAL "ppc64" AND ppc_support)
                 set(osx_arch_ppc64 TRUE)
+            elseif("${osx_arch}" STREQUAL "arm64")
+                set(osx_arch_arm64 TRUE)
             else()
                 message(FATAL_ERROR "Invalid OS X arch name: ${osx_arch}")
             endif()
@@ -116,6 +121,10 @@ function(target_architecture output_var)
 
         if(osx_arch_ppc64)
             list(APPEND ARCH ppc64)
+        endif()
+
+        if(osx_arch_arm64)
+            list(APPEND ARCH arm64)
         endif()
     else()
         file(WRITE "${CMAKE_BINARY_DIR}/arch.c" "${archdetect_c_code}")
